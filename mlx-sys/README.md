@@ -55,3 +55,20 @@ for define in std::env::var("DEP_MLX_DEFINES").unwrap().split_whitespace() {
     };
 }
 ```
+
+## CUDA (Linux)
+
+The `cuda` feature builds MLX's CUDA backend (`MLX_BUILD_CUDA`) as shared `libmlx`/`libmlxc`:
+
+```toml
+mlx-sys = { version = "0.7", default-features = false, features = ["cuda"] }
+mlx-rs = { version = "0.34", default-features = false }
+```
+
+- It can't be combined with `metal` or `accelerate`.
+- `MLX_CUDA_ARCHITECTURES` picks the GPUs (e.g. `89` for an L4; unset, MLX asks the build machine's GPU);
+  `CUDA_HOME` or `CUDA_PATH` the toolkit's nvcc. MLX also needs cuDNN, BLAS and LAPACK(E) where CMake finds them.
+- `MLX_SYS_PREBUILT=<dir>` links a finished CUDA build (an earlier `OUT_DIR`, with `build/lib`, `build/include`
+  and `build/_deps/mlx-src`) instead of running CMake.
+- At run time libmlx finds its JIT headers in `../include` beside its `lib` directory, and the CUDA headers
+  under `CUDA_HOME` (default `/usr/local/cuda`).
