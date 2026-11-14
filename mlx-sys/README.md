@@ -72,3 +72,5 @@ mlx-rs = { version = "0.34", default-features = false }
   and `build/_deps/mlx-src`) instead of running CMake.
 - At run time libmlx finds its JIT headers in `../include` beside its `lib` directory, and the CUDA headers
   under `CUDA_HOME` (default `/usr/local/cuda`).
+- MLX's CUDA caches (conv plans, attention, graphs) evict instead of throwing "Cache thrashing is happening"
+  after many misses (`cuda.cmake` patches `lru_cache.h`): a server reading inputs of many shapes keeps working.
